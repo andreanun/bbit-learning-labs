@@ -19,9 +19,12 @@ class Article:
 def get_all_news() -> list[Article]:
     """Get all news articles from the datastore."""
     # 1. Use Redis client to fetch all articles
+    all_articles : list[dict] =  REDIS_HOST.get_entry("all_articles")
+    if all_articles is None:
+        return []
     # 2. Format the data into articles
     # 3. Return a list of the articles formatted 
-    return []
+    return [_format_as_article(article) for article in all_articles]
 
 
 def get_featured_news() -> Article | None:
@@ -29,3 +32,8 @@ def get_featured_news() -> Article | None:
     # 1. Get all the articles
     # 2. Return as a list of articles sorted by most recent date
     return None
+
+def _format_as_article(data: dict) -> Article:
+    return Article (
+        author=data["author"]
+    )
